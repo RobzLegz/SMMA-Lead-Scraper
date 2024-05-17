@@ -4,7 +4,55 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import csv
+import os
 
+def list_files(directory):
+    """
+    List all files in the given directory.
+    """
+    try:
+        files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
+        return files
+    except FileNotFoundError:
+        print(f"The directory {directory} does not exist.")
+        return []
+
+def display_files(files):
+    """
+    Display the files in a list with indices.
+    """
+    for idx, file in enumerate(files):
+        print(f"{idx + 1}: {file}")
+
+def get_file_choice(files):
+    """
+    Get the user's choice of which file to open.
+    """
+    while True:
+        try:
+            choice = int(input("Enter the number of the file you want to open: ")) - 1
+            if 0 <= choice < len(files):
+                return files[choice]
+            else:
+                print("Invalid choice, please try again.")
+        except ValueError:
+            print("Invalid input, please enter a number.")
+
+def get_file_path():
+    directory = "input"
+    files = list_files(directory)
+    if not files:
+        print("No files found in the directory.")
+        return
+    
+    print("\nFiles in directory:")
+    display_files(files)
+    
+    chosen_file = get_file_choice(files)
+    file_path = os.path.join(directory, chosen_file)
+
+    return file_path
+    
 # Function to extract emails from a text using regex
 def extract_emails(text):
     email_regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
@@ -50,11 +98,12 @@ def extract_linkedin_urls(html_content):
 
 data = []
 
+# Load the CSV file into a DataFrame
+inp_file = get_file_path()
+df = pd.read_csv(inp_file)
+
 country = input("Enter country: ")
 service = input("Enter service / niche: ")
-
-# Load the CSV file into a DataFrame
-df = pd.read_csv('scraped_leads.csv')
 
 # Iterate over each row in the DataFrame
 for index, row in df.iterrows():
@@ -120,7 +169,7 @@ for index, row in df.iterrows():
     time.sleep(1.5)
 
 
-csv_file_path = 'leads_out.csv'
+csv_file_path = '/out/leads_out.csv'
 header = [
     "ID", "Lead Name", "Salutation", "First Name", "Last Name", "Middle Name", "First And Last Names",
     "Date of birth", "Address", "Street, house no.", "Apartment, office, room, floor", "City", "District",
@@ -164,7 +213,7 @@ with open(csv_file_path, 'w', newline='', encoding='utf-8') as csv_file:
 print(f"CSV file '{csv_file_path}' has been created.")
 
 
-csv_file_path = 'sheets_leads.csv'
+csv_file_path = '/out/sheets_leads.csv'
 header = [
     "Business Name", "Address", "Phone", "Website", "Email", "Email 2", "Email 3", "Facebook", "Linkedin", "Notes", "Contacted"
 ]
