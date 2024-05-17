@@ -169,7 +169,7 @@ for index, row in df.iterrows():
     time.sleep(1.5)
 
 
-csv_file_path = '/out/leads_out.csv'
+csv_file_path = 'leads_out.csv'
 header = [
     "ID", "Lead Name", "Salutation", "First Name", "Last Name", "Middle Name", "First And Last Names",
     "Date of birth", "Address", "Street, house no.", "Apartment, office, room, floor", "City", "District",
@@ -202,8 +202,8 @@ with open(csv_file_path, 'w', newline='', encoding='utf-8') as csv_file:
             "Home E-mail": lead.get("home_email", ""),
             "Facebook Page": lead.get("facebook_url", ""),
             "Other Website": lead.get("linkedin_url", ""),
-            "Country": country,
             "Comment": "Data miner google maps",
+            "Country": country,
             "Opportunity": 1000,
             "Currency": "EUR",
             "Available to everyone": "no",
@@ -213,7 +213,7 @@ with open(csv_file_path, 'w', newline='', encoding='utf-8') as csv_file:
 print(f"CSV file '{csv_file_path}' has been created.")
 
 
-csv_file_path = '/out/sheets_leads.csv'
+csv_file_path = 'sheets_leads.csv'
 header = [
     "Business Name", "Address", "Phone", "Website", "Email", "Email 2", "Email 3", "Facebook", "Linkedin", "Notes", "Contacted"
 ]
