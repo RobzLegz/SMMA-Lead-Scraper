@@ -163,7 +163,7 @@ for index, row in df.iterrows():
 
         data.append(d)
         
-    except requests.exceptions.RequestException as e:
+    except Exception as e:
         print(f"Error fetching {website}: {e}")
 
     time.sleep(1.5)
