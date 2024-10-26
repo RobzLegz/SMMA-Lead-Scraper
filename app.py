@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import time
 import csv
 import os
+import json
 
 def list_files(directory):
     """
@@ -218,13 +219,15 @@ header = [
     "Business Name", "Address", "Phone", "Website", "Email", "Email 2", "Email 3", "Facebook", "Linkedin", "Notes", "Contacted"
 ]
 
+json_data = []
+
 with open(csv_file_path, 'w', newline='', encoding='utf-8') as csv_file:
     csv_writer = csv.DictWriter(csv_file, fieldnames=header, delimiter=';')
     
     csv_writer.writeheader()
 
     for idx, lead in enumerate(data, start=1):
-        csv_writer.writerow({
+        b = {
             "Business Name": lead.get("business_name", ""),
             "Website": lead.get("website", ""),
             "Address": lead.get("address", ""),
@@ -236,6 +239,12 @@ with open(csv_file_path, 'w', newline='', encoding='utf-8') as csv_file:
             "Linkedin": lead.get("linkedin_url", ""),
             "Notes": "Data miner google maps",
             "Contacted": "",
-        })
+        }
+
+        json_data.append(b)
+        csv_writer.writerow(b)
 
 print(f"CSV file '{csv_file_path}' has been created.")
+
+with open("export_leads.json", 'w') as json_file:
+    json.dump(json_data, json_file, indent=4)
